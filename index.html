@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>VerseMate</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#1a1612;color:#e8dcc8;height:100vh;display:flex;flex-direction:column}
+a{color:#c8973a}
+h1,h2,h3{font-family:'Lora',serif;color:#c8973a}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:#1a1612}
+::-webkit-scrollbar-thumb{background:#3d2f1e;border-radius:3px}
+
+/* ── Layout ── */
+#app{display:flex;height:100vh;overflow:hidden}
+#sidebar{width:260px;min-width:260px;background:#12100e;border-right:1px solid #3d2f1e;display:flex;flex-direction:column;overflow-y:auto;padding:1rem}
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+
+/* ── Sidebar ── */
+.sidebar-logo{text-align:center;padding:.75rem 0 .5rem}
+.sidebar-logo .icon{font-size:2rem}
+.sidebar-logo .name{font-family:'Lora',serif;font-size:1.2rem;color:#c8973a;font-weight:600}
+.sidebar-logo .sub{font-size:.75rem;color:#a89070;margin-top:.2rem}
+.sidebar-section{font-size:.75rem;color:#a89070;letter-spacing:.08em;text-transform:uppercase;margin:1rem 0 .4rem}
+.mode-btn{width:100%;background:#2a1f14;color:#e8dcc8;border:1px solid #3d2f1e;border-radius:10px;padding:.55rem .8rem;font-family:'Inter',sans-serif;font-size:.85rem;cursor:pointer;text-align:left;margin-bottom:.35rem;transition:all .2s}
+.mode-btn:hover,.mode-btn.active{background:#c8973a;color:#1a1612;border-color:#c8973a}
+.translation-row{display:flex;gap:.5rem}
+.trans-btn{flex:1;background:#2a1f14;color:#e8dcc8;border:1px solid #3d2f1e;border-radius:8px;padding:.4rem;font-size:.8rem;cursor:pointer;transition:all .2s}
+.trans-btn.active{background:#c8973a;color:#1a1612;border-color:#c8973a}
+.fav-item{background:#221c14;border:1px solid #3d2f1e;border-radius:8px;padding:.6rem;font-size:.78rem;color:#e8dcc8;margin-bottom:.4rem;cursor:pointer;position:relative}
+.fav-item:hover{border-color:#c8973a}
+.fav-del{position:absolute;top:.4rem;right:.4rem;background:none;border:none;color:#a89070;cursor:pointer;font-size:.75rem}
+hr{border:none;border-top:1px solid #3d2f1e;margin:.75rem 0}
+
+/* ── Header ── */
+#header{padding:.75rem 1.5rem;border-bottom:1px solid #3d2f1e;display:flex;align-items:center;gap:1rem}
+#header h2{font-size:1.1rem}
+#menu-toggle{display:none;background:none;border:none;color:#e8dcc8;font-size:1.4rem;cursor:pointer}
+
+/* ── Daily verse ── */
+#daily-verse{margin:.75rem 1.5rem;background:#1e1810;border:1px solid #c8973a55;border-radius:14px;padding:1rem 1.2rem}
+.dv-label{font-size:.7rem;color:#c8973a;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.3rem}
+.dv-verse{font-family:'Lora',serif;color:#e8dcc8;font-style:italic;font-size:.9rem;line-height:1.7;margin-bottom:.4rem}
+.dv-word{color:#a89070;font-size:.82rem;line-height:1.6}
+
+/* ── Chat ── */
+#chat-wrap{flex:1;overflow-y:auto;padding:1rem 1.5rem;display:flex;flex-direction:column;gap:.75rem}
+.msg{border-radius:14px;padding:.9rem 1.1rem;border:1px solid #3d2f1e;line-height:1.7;font-size:.9rem;max-width:100%}
+.msg.assistant{background:#221c14}
+.msg.user{background:#2a1f14;border-color:#c8973a44;align-self:flex-end;max-width:80%}
+.msg-actions{display:flex;gap:.5rem;margin-top:.5rem}
+.save-btn{background:none;border:1px solid #3d2f1e;color:#a89070;border-radius:8px;padding:.25rem .6rem;font-size:.75rem;cursor:pointer;transition:all .2s}
+.save-btn:hover{border-color:#c8973a;color:#c8973a}
+.save-btn.saved{color:#c8973a;border-color:#c8973a}
+
+/* ── Input ── */
+#input-area{padding:.75rem 1.5rem;border-top:1px solid #3d2f1e;display:flex;gap:.6rem}
+#user-input{flex:1;background:#221c14;border:1px solid #3d2f1e;border-radius:14px;color:#e8dcc8;padding:.65rem 1rem;font-family:'Inter',sans-serif;font-size:.9rem;outline:none;transition:border .2s}
+#user-input:focus{border-color:#c8973a}
+#send-btn{background:#c8973a;color:#1a1612;border:none;border-radius:12px;padding:.65rem 1.2rem;font-weight:500;cursor:pointer;transition:background .2s}
+#send-btn:hover{background:#e8b84b}
+#send-btn:disabled{background:#3d2f1e;color:#a89070;cursor:not-allowed}
+
+/* ── Welcome ── */
+#welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;text-align:center;padding:2rem}
+#welcome .big-icon{font-size:3.5rem;margin-bottom:.5rem}
+#welcome h1{font-size:2.8rem;margin-bottom:.75rem}
+#welcome p{max-width:480px;line-height:1.8;color:#e8dcc8;margin-bottom:.4rem}
+#welcome .sub-p{color:#a89070;font-size:.9rem;margin-bottom:2rem}
+#enter-btn{background:#c8973a;color:#1a1612;border:none;border-radius:12px;padding:.75rem 2.5rem;font-size:1rem;font-weight:500;cursor:pointer;transition:background .2s}
+#enter-btn:hover{background:#e8b84b}
+#welcome img{width:100%;max-width:600px;border-radius:14px;margin-bottom:1.5rem}
+
+/* ── Devotional ── */
+#devot-picker{padding:1.5rem;display:flex;flex-direction:column;gap:.75rem}
+.theme-card{background:#221c14;border:1px solid #3d2f1e;border-radius:12px;padding:1rem 1.2rem;cursor:pointer;transition:all .2s}
+.theme-card:hover{border-color:#c8973a}
+.theme-card h3{font-size:1rem;margin-bottom:.3rem}
+.theme-card p{font-size:.82rem;color:#a89070}
+.day-banner{background:#221c14;border:1px solid #3d2f1e;border-radius:12px;padding:1rem 1.2rem;margin:.75rem 1.5rem;font-size:.88rem;line-height:1.7}
+.devot-nav{display:flex;gap:.75rem;padding:0 1.5rem .75rem}
+.devot-nav button{flex:1;padding:.55rem;border-radius:10px;border:1px solid #3d2f1e;background:#2a1f14;color:#e8dcc8;cursor:pointer;font-size:.85rem;transition:all .2s}
+.devot-nav button:hover{background:#c8973a;color:#1a1612;border-color:#c8973a}
+
+/* ── Spinner ── */
+.typing{display:flex;gap:5px;padding:.5rem}
+.typing span{width:8px;height:8px;background:#c8973a;border-radius:50%;animation:bounce .9s infinite}
+.typing span:nth-child(2){animation-delay:.2s}
+.typing span:nth-child(3){animation-delay:.4s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+
+/* ── YouTube ── */
+.video-list{padding:.5rem 1.5rem 0}
+.video-list h4{font-size:.85rem;color:#c8973a;margin-bottom:.4rem}
+.video-item{background:#221c14;border:1px solid #3d2f1e;border-radius:8px;padding:.6rem .8rem;margin-bottom:.4rem;font-size:.8rem}
+.video-item a{color:#c8973a;text-decoration:none}
+.video-item a:hover{text-decoration:underline}
+.video-channel{color:#a89070;font-size:.75rem}
+
+@media(max-width:640px){
+  #sidebar{position:fixed;left:-260px;top:0;bottom:0;z-index:100;transition:left .25s}
+  #sidebar.open{left:0}
+  #menu-toggle{display:block}
+  #overlay{display:none;position:fixed;inset:0;background:#0008;z-index:99}
+  #overlay.show{display:block}
+}
+</style>
+</head>
+<body>
+
+<!-- Welcome screen -->
+<div id="welcome">
+  <img src="https://thumbs.dreamstime.com/b/cross-shining-clouds-sunset-symbolizing-hope-faith-golden-light-radiates-cross-surrounded-soft-fluffy-356342966.jpg" alt="Cross"/>
+  <div class="big-icon">✨</div>
+  <h1>VerseMate</h1>
+  <p>A spiritual companion built to walk with you through life — with scripture, wisdom, and the warmth of the Word.</p>
+  <p class="sub-p">Bring your emotions. Bring your questions. Bring your doubts.<br>You are welcome here.</p>
+  <button id="enter-btn">Enter</button>
+</div>
+
+<!-- Main app (hidden until welcome dismissed) -->
+<div id="app" style="display:none">
+  <div id="overlay"></div>
+
+  <!-- Sidebar -->
+  <div id="sidebar">
+    <div class="sidebar-logo">
+      <div class="icon">✨</div>
+      <div class="name">VerseMate</div>
+      <div class="sub">Your spiritual companion</div>
+    </div>
+    <hr/>
+
+    <div class="sidebar-section">Translation</div>
+    <div class="translation-row">
+      <button class="trans-btn active" data-t="ESV">ESV</button>
+      <button class="trans-btn" data-t="KJV">KJV</button>
+    </div>
+    <hr/>
+
+    <div class="sidebar-section">Mode</div>
+    <button class="mode-btn active" data-mode="heart_check">💛 Heart Check</button>
+    <button class="mode-btn" data-mode="general">💬 General</button>
+    <button class="mode-btn" data-mode="journaling">📓 Journaling</button>
+    <button class="mode-btn" data-mode="bible_study">📖 Bible Study</button>
+    <button class="mode-btn" data-mode="prayer">🙏 Prayer</button>
+    <button class="mode-btn" data-mode="devotional">📅 Devotional</button>
+    <hr/>
+
+    <div class="sidebar-section">⭐ Favorites</div>
+    <div id="fav-list"></div>
+    <hr/>
+
+    <button class="mode-btn" id="clear-btn" style="background:#2a1f14;color:#a89070">🗑️ Clear Chat</button>
+  </div>
+
+  <!-- Main panel -->
+  <div id="main">
+    <div id="header">
+      <button id="menu-toggle">☰</button>
+      <h2 id="mode-title">💛 Heart Check</h2>
+    </div>
+    <div id="daily-verse">
+      <div class="dv-label">Today's Word</div>
+      <div class="dv-verse" id="dv-verse">Loading…</div>
+      <div class="dv-word"  id="dv-word"></div>
+    </div>
+
+    <!-- Devotional picker (shown when devotional mode + no theme) -->
+    <div id="devot-picker" style="display:none"></div>
+
+    <!-- Day banner (shown during devotional session) -->
+    <div id="day-banner" class="day-banner" style="display:none"></div>
+
+    <!-- Chat messages -->
+    <div id="chat-wrap"></div>
+
+    <!-- Devotional nav buttons -->
+    <div id="devot-nav" class="devot-nav" style="display:none">
+      <button id="next-day-btn">➡️ Next Day</button>
+      <button id="restart-plan-btn">🔄 Restart Plan</button>
+    </div>
+
+    <!-- Input -->
+    <div id="input-area">
+      <input id="user-input" type="text" placeholder="How are you doing today?" autocomplete="off"/>
+      <button id="send-btn">Send</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────────
+const state = {
+  mode: 'heart_check',
+  translation: 'ESV',
+  messages: [],          // current chat history
+  favorites: [],
+  devotional: null,      // {theme, day} or null
+  modeTitles: {
+    heart_check: '💛 Heart Check',
+    general:     '💬 General',
+    journaling:  '📓 Journaling',
+    bible_study: '📖 Bible Study',
+    prayer:      '🙏 Prayer',
+    devotional:  '📅 Devotional',
+  },
+  DEVOTIONAL_THEMES: {
+    identity:  { label: '🪞 Identity',    desc: 'Discover who you are through my eyes — not the world\'s.', days: 7 },
+    faith:     { label: '🕊️ Faith',       desc: 'Grow deeper in trusting me — even when you cannot see.', days: 7 },
+    gratitude: { label: '🌿 Gratitude',   desc: 'Train your heart to see my hand in everything.', days: 7 },
+  }
+};
+
+function loadStorage() {
+  try {
+    state.favorites  = JSON.parse(localStorage.getItem('vm_favorites')  || '[]');
+    state.devotional = JSON.parse(localStorage.getItem('vm_devotional') || 'null');
+  } catch(e) {}
+}
+function saveStorage() {
+  localStorage.setItem('vm_favorites',  JSON.stringify(state.favorites));
+  localStorage.setItem('vm_devotional', JSON.stringify(state.devotional));
+}
+
+// ── DOM refs ───────────────────────────────────────────────────────────────────
+const $chat      = document.getElementById('chat-wrap');
+const $input     = document.getElementById('user-input');
+const $sendBtn   = document.getElementById('send-btn');
+const $modeTitle = document.getElementById('mode-title');
+const $devotPick = document.getElementById('devot-picker');
+const $dayBanner = document.getElementById('day-banner');
+const $devotNav  = document.getElementById('devot-nav');
+const $inputArea = document.getElementById('input-area');
+
+// ── Welcome ────────────────────────────────────────────────────────────────────
+document.getElementById('enter-btn').onclick = () => {
+  document.getElementById('welcome').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  loadStorage();
+  renderFavorites();
+  loadDailyVerse();
+  startChat();
+};
+
+// ── Mobile sidebar ─────────────────────────────────────────────────────────────
+document.getElementById('menu-toggle').onclick = () => {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('show');
+};
+document.getElementById('overlay').onclick = () => {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+};
+
+// ── Translation ────────────────────────────────────────────────────────────────
+document.querySelectorAll('.trans-btn').forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll('.trans-btn').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    state.translation = b.dataset.t;
+  };
+});
+
+// ── Mode buttons ───────────────────────────────────────────────────────────────
+document.querySelectorAll('.mode-btn[data-mode]').forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll('.mode-btn[data-mode]').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    state.mode = b.dataset.mode;
+    state.messages = [];
+    $modeTitle.textContent = state.modeTitles[state.mode];
+    clearChat();
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlay').classList.remove('show');
+    startChat();
+  };
+});
+
+// ── Clear ──────────────────────────────────────────────────────────────────────
+document.getElementById('clear-btn').onclick = () => {
+  state.messages = [];
+  clearChat();
+  startChat();
+};
+
+// ── Daily verse ────────────────────────────────────────────────────────────────
+async function loadDailyVerse() {
+  const today = new Date().toDateString();
+  const cached = JSON.parse(localStorage.getItem('vm_dv') || 'null');
+  if (cached && cached.date === today) {
+    document.getElementById('dv-verse').textContent = cached.verse;
+    document.getElementById('dv-word').textContent  = cached.word;
+    return;
+  }
+  try {
+    const r = await fetch('/api/daily-verse');
+    const d = await r.json();
+    document.getElementById('dv-verse').textContent = d.verse;
+    document.getElementById('dv-word').textContent  = d.word;
+    localStorage.setItem('vm_dv', JSON.stringify({date: today, ...d}));
+  } catch(e) {
+    document.getElementById('dv-verse').textContent = 'Could not load today\'s verse.';
+  }
+}
+
+// ── Chat helpers ───────────────────────────────────────────────────────────────
+function clearChat() { $chat.innerHTML = ''; }
+
+function appendMsg(role, text, showSave=false) {
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  div.innerHTML = text.replace(/\n/g,'<br/>');
+  if (showSave && role === 'assistant') {
+    const actions = document.createElement('div');
+    actions.className = 'msg-actions';
+    const btn = document.createElement('button');
+    btn.className = 'save-btn';
+    btn.textContent = '⭐ Save this';
+    btn.onclick = () => {
+      state.favorites.push(text);
+      saveStorage();
+      renderFavorites();
+      btn.textContent = '✓ Saved';
+      btn.classList.add('saved');
+    };
+    actions.appendChild(btn);
+    div.appendChild(actions);
+  }
+  $chat.appendChild(div);
+  $chat.scrollTop = $chat.scrollHeight;
+  return div;
+}
+
+function showTyping() {
+  const div = document.createElement('div');
+  div.className = 'msg assistant';
+  div.id = 'typing-indicator';
+  div.innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
+  $chat.appendChild(div);
+  $chat.scrollTop = $chat.scrollHeight;
+}
+function removeTyping() { document.getElementById('typing-indicator')?.remove(); }
+
+// ── Favorites ─────────────────────────────────────────────────────────────────
+function renderFavorites() {
+  const el = document.getElementById('fav-list');
+  el.innerHTML = '';
+  if (!state.favorites.length) {
+    el.innerHTML = '<div style="font-size:.78rem;color:#a89070">No favorites yet.</div>';
+    return;
+  }
+  state.favorites.forEach((fav, i) => {
+    const d = document.createElement('div');
+    d.className = 'fav-item';
+    d.innerHTML = fav.slice(0,60) + '…';
+    const del = document.createElement('button');
+    del.className = 'fav-del';
+    del.textContent = '✕';
+    del.onclick = e => { e.stopPropagation(); state.favorites.splice(i,1); saveStorage(); renderFavorites(); };
+    d.appendChild(del);
+    el.appendChild(d);
+  });
+}
+
+// ── API call ───────────────────────────────────────────────────────────────────
+async function apiChat(messages, mode, translation) {
+  const r = await fetch('/api/chat', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({mode, messages, translation})
+  });
+  const d = await r.json();
+  return d.reply;
+}
+
+async function apiDevotional(messages, theme, day) {
+  const r = await fetch('/api/devotional/chat', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({messages, theme, day})
+  });
+  const d = await r.json();
+  return d.reply;
+}
+
+async function fetchYoutube(query) {
+  try {
+    const r = await fetch('/api/youtube', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({query})
+    });
+    return (await r.json()).videos || [];
+  } catch(e) { return []; }
+}
+
+function showYoutubeResults(videos) {
+  if (!videos.length) return;
+  const wrap = document.createElement('div');
+  wrap.className = 'video-list';
+  wrap.innerHTML = '<h4>📺 Related Sermons & Videos</h4>';
+  videos.forEach(v => {
+    const d = document.createElement('div');
+    d.className = 'video-item';
+    d.innerHTML = `<a href="${v.url}" target="_blank">${v.title}</a><div class="video-channel">${v.channel}</div>`;
+    wrap.appendChild(d);
+  });
+  $chat.appendChild(wrap);
+  $chat.scrollTop = $chat.scrollHeight;
+}
+
+// ── Start / send ───────────────────────────────────────────────────────────────
+async function startChat() {
+  $devotPick.style.display = 'none';
+  $dayBanner.style.display = 'none';
+  $devotNav.style.display  = 'none';
+  $inputArea.style.display = 'flex';
+
+  if (state.mode === 'devotional') {
+    if (!state.devotional) {
+      showDevotPicker(); return;
+    }
+    showDevotSession();
+    if (state.messages.length === 0) {
+      await sendDevotOpening();
+    }
+    return;
+  }
+
+  // Regular modes — opening greeting
+  $sendBtn.disabled = true;
+  showTyping();
+  try {
+    const reply = await apiChat([], state.mode, state.translation);
+    removeTyping();
+    state.messages.push({role:'assistant', content: reply});
+    appendMsg('assistant', reply, true);
+  } catch(e) {
+    removeTyping();
+    appendMsg('assistant', 'Something went wrong. Please try again.');
+  }
+  $sendBtn.disabled = false;
+}
+
+async function sendMessage() {
+  const text = $input.value.trim();
+  if (!text) return;
+  $input.value = '';
+  $sendBtn.disabled = true;
+
+  if (state.mode === 'devotional') {
+    await sendDevotMessage(text); $sendBtn.disabled = false; return;
+  }
+
+  state.messages.push({role:'user', content: text});
+  appendMsg('user', text);
+  showTyping();
+
+  try {
+    const reply = await apiChat(state.messages, state.mode, state.translation);
+    removeTyping();
+    state.messages.push({role:'assistant', content: reply});
+    appendMsg('assistant', reply, true);
+
+    if (state.mode === 'bible_study') {
+      const videos = await fetchYoutube(text);
+      showYoutubeResults(videos);
+    }
+  } catch(e) {
+    removeTyping();
+    appendMsg('assistant', 'Something went wrong. Please try again.');
+  }
+  $sendBtn.disabled = false;
+}
+
+$sendBtn.onclick = sendMessage;
+$input.addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(); });
+
+// ── Devotional ─────────────────────────────────────────────────────────────────
+function showDevotPicker() {
+  $devotPick.style.display = 'flex';
+  $inputArea.style.display = 'none';
+  $devotPick.innerHTML = '<h3 style="color:#c8973a;font-family:Lora,serif;margin-bottom:.5rem">Choose a Devotional Theme</h3>';
+  Object.entries(state.DEVOTIONAL_THEMES).forEach(([key, info]) => {
+    const card = document.createElement('div');
+    card.className = 'theme-card';
+    card.innerHTML = `<h3>${info.label}</h3><p>${info.desc}</p>`;
+    card.onclick = () => {
+      state.devotional = {theme: key, day: 0};
+      saveStorage();
+      state.messages = [];
+      clearChat();
+      $devotPick.style.display = 'none';
+      showDevotSession();
+      sendDevotOpening();
+    };
+    $devotPick.appendChild(card);
+  });
+}
+
+function showDevotSession() {
+  $devotNav.style.display = 'flex';
+  $dayBanner.style.display = 'block';
+  $inputArea.style.display = 'flex';
+  const {theme, day} = state.devotional;
+  const info = state.DEVOTIONAL_THEMES[theme];
+  $dayBanner.innerHTML = `<strong>${info.label} — Day ${day+1} of 7</strong>`;
+
+  // Next day btn
+  const nextBtn = document.getElementById('next-day-btn');
+  if (day >= 6) {
+    nextBtn.textContent = '🎉 Plan Complete!';
+    nextBtn.disabled = true;
+  } else {
+    nextBtn.textContent = '➡️ Next Day';
+    nextBtn.disabled = false;
+  }
+}
+
+document.getElementById('next-day-btn').onclick = () => {
+  if (state.devotional.day < 6) {
+    state.devotional.day++;
+    saveStorage();
+    state.messages = [];
+    clearChat();
+    showDevotSession();
+    sendDevotOpening();
+  }
+};
+document.getElementById('restart-plan-btn').onclick = () => {
+  state.devotional = null;
+  saveStorage();
+  state.messages = [];
+  clearChat();
+  startChat();
+};
+
+async function sendDevotOpening() {
+  $sendBtn.disabled = true;
+  showTyping();
+  try {
+    const reply = await apiDevotional([], state.devotional.theme, state.devotional.day);
+    removeTyping();
+    state.messages.push({role:'assistant', content: reply});
+    appendMsg('assistant', reply, true);
+  } catch(e) {
+    removeTyping();
+    appendMsg('assistant', 'Something went wrong.');
+  }
+  $sendBtn.disabled = false;
+}
+
+async function sendDevotMessage(text) {
+  state.messages.push({role:'user', content: text});
+  appendMsg('user', text);
+  showTyping();
+  try {
+    const reply = await apiDevotional(state.messages, state.devotional.theme, state.devotional.day);
+    removeTyping();
+    state.messages.push({role:'assistant', content: reply});
+    appendMsg('assistant', reply, true);
+  } catch(e) {
+    removeTyping();
+    appendMsg('assistant', 'Something went wrong.');
+  }
+}
+</script>
+</body>
+</html>
