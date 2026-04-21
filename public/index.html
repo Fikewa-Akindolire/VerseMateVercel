@@ -26,9 +26,12 @@ h1,h2,h3{font-family:'Lora',serif;color:#c8973a}
 .sidebar-section{font-size:.75rem;color:#a89070;letter-spacing:.08em;text-transform:uppercase;margin:1rem 0 .4rem}
 .mode-btn{width:100%;background:#2a1f14;color:#e8dcc8;border:1px solid #3d2f1e;border-radius:10px;padding:.55rem .8rem;font-family:'Inter',sans-serif;font-size:.85rem;cursor:pointer;text-align:left;margin-bottom:.35rem;transition:all .2s}
 .mode-btn:hover,.mode-btn.active{background:#c8973a;color:#1a1612;border-color:#c8973a}
-.translation-row{display:flex;gap:.5rem}
-.trans-btn{flex:1;background:#2a1f14;color:#e8dcc8;border:1px solid #3d2f1e;border-radius:8px;padding:.4rem;font-size:.8rem;cursor:pointer;transition:all .2s}
+
+/* ── Translation grid ── */
+.translation-grid{display:grid;grid-template-columns:1fr 1fr;gap:.4rem}
+.trans-btn{background:#2a1f14;color:#e8dcc8;border:1px solid #3d2f1e;border-radius:8px;padding:.4rem;font-size:.78rem;cursor:pointer;transition:all .2s;text-align:center}
 .trans-btn.active{background:#c8973a;color:#1a1612;border-color:#c8973a}
+
 .fav-item{background:#221c14;border:1px solid #3d2f1e;border-radius:8px;padding:.6rem;font-size:.78rem;color:#e8dcc8;margin-bottom:.4rem;cursor:pointer;position:relative}
 .fav-item:hover{border-color:#c8973a}
 .fav-del{position:absolute;top:.4rem;right:.4rem;background:none;border:none;color:#a89070;cursor:pointer;font-size:.75rem}
@@ -50,10 +53,11 @@ hr{border:none;border-top:1px solid #3d2f1e;margin:.75rem 0}
 .msg{border-radius:14px;padding:.9rem 1.1rem;border:1px solid #3d2f1e;line-height:1.7;font-size:.9rem;max-width:100%}
 .msg.assistant{background:#221c14}
 .msg.user{background:#2a1f14;border-color:#c8973a44;align-self:flex-end;max-width:80%}
-.msg-actions{display:flex;gap:.5rem;margin-top:.5rem}
-.save-btn{background:none;border:1px solid #3d2f1e;color:#a89070;border-radius:8px;padding:.25rem .6rem;font-size:.75rem;cursor:pointer;transition:all .2s}
-.save-btn:hover{border-color:#c8973a;color:#c8973a}
+.msg-actions{display:flex;gap:.5rem;margin-top:.5rem;flex-wrap:wrap}
+.save-btn,.copy-btn,.share-btn{background:none;border:1px solid #3d2f1e;color:#a89070;border-radius:8px;padding:.25rem .6rem;font-size:.75rem;cursor:pointer;transition:all .2s}
+.save-btn:hover,.copy-btn:hover,.share-btn:hover{border-color:#c8973a;color:#c8973a}
 .save-btn.saved{color:#c8973a;border-color:#c8973a}
+.copy-btn.copied{color:#6abf69;border-color:#6abf69}
 
 /* ── Input ── */
 #input-area{padding:.75rem 1.5rem;border-top:1px solid #3d2f1e;display:flex;gap:.6rem}
@@ -72,6 +76,25 @@ hr{border:none;border-top:1px solid #3d2f1e;margin:.75rem 0}
 #enter-btn{background:#c8973a;color:#1a1612;border:none;border-radius:12px;padding:.75rem 2.5rem;font-size:1rem;font-weight:500;cursor:pointer;transition:background .2s}
 #enter-btn:hover{background:#e8b84b}
 #welcome img{width:100%;max-width:600px;border-radius:14px;margin-bottom:1.5rem}
+
+/* ── Onboarding ── */
+#onboarding{display:none;position:fixed;inset:0;background:#0000009a;z-index:200;align-items:center;justify-content:center}
+#onboarding.show{display:flex}
+.onboard-card{background:#1e1810;border:1px solid #c8973a55;border-radius:20px;padding:2rem;max-width:480px;width:90%;text-align:center}
+.onboard-card h2{font-size:1.4rem;margin-bottom:.5rem}
+.onboard-card p{color:#a89070;font-size:.88rem;margin-bottom:1.5rem;line-height:1.7}
+.onboard-step{display:none}
+.onboard-step.active{display:block}
+.onboard-options{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.5rem}
+.onboard-opt{background:#2a1f14;border:1px solid #3d2f1e;border-radius:10px;padding:.7rem 1rem;color:#e8dcc8;cursor:pointer;font-size:.88rem;transition:all .2s;text-align:left}
+.onboard-opt:hover,.onboard-opt.selected{background:#c8973a22;border-color:#c8973a;color:#c8973a}
+.onboard-progress{display:flex;gap:.4rem;justify-content:center;margin-bottom:1.2rem}
+.onboard-dot{width:8px;height:8px;border-radius:50%;background:#3d2f1e;transition:background .3s}
+.onboard-dot.active{background:#c8973a}
+.onboard-next{background:#c8973a;color:#1a1612;border:none;border-radius:10px;padding:.6rem 2rem;font-size:.9rem;font-weight:500;cursor:pointer;transition:background .2s}
+.onboard-next:hover{background:#e8b84b}
+.onboard-next:disabled{background:#3d2f1e;color:#a89070;cursor:not-allowed}
+.onboard-greeting{font-family:'Lora',serif;font-style:italic;font-size:1rem;color:#c8973a;line-height:1.8;margin-bottom:1.2rem}
 
 /* ── Devotional ── */
 #devot-picker{padding:1.5rem;display:flex;flex-direction:column;gap:.75rem}
@@ -99,6 +122,10 @@ hr{border:none;border-top:1px solid #3d2f1e;margin:.75rem 0}
 .video-item a:hover{text-decoration:underline}
 .video-channel{color:#a89070;font-size:.75rem}
 
+/* ── Toast ── */
+#toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:#c8973a;color:#1a1612;padding:.5rem 1.2rem;border-radius:20px;font-size:.82rem;font-weight:500;opacity:0;transition:opacity .3s;pointer-events:none;z-index:500}
+#toast.show{opacity:1}
+
 @media(max-width:640px){
   #sidebar{position:fixed;left:-260px;top:0;bottom:0;z-index:100;transition:left .25s}
   #sidebar.open{left:0}
@@ -110,6 +137,9 @@ hr{border:none;border-top:1px solid #3d2f1e;margin:.75rem 0}
 </head>
 <body>
 
+<!-- Toast -->
+<div id="toast"></div>
+
 <!-- Welcome screen -->
 <div id="welcome">
   <img src="https://thumbs.dreamstime.com/b/cross-shining-clouds-sunset-symbolizing-hope-faith-golden-light-radiates-cross-surrounded-soft-fluffy-356342966.jpg" alt="Cross"/>
@@ -120,7 +150,60 @@ hr{border:none;border-top:1px solid #3d2f1e;margin:.75rem 0}
   <button id="enter-btn">Enter</button>
 </div>
 
-<!-- Main app (hidden until welcome dismissed) -->
+<!-- Onboarding overlay -->
+<div id="onboarding">
+  <div class="onboard-card">
+    <div class="onboard-progress">
+      <div class="onboard-dot active" id="dot-0"></div>
+      <div class="onboard-dot" id="dot-1"></div>
+      <div class="onboard-dot" id="dot-2"></div>
+    </div>
+
+    <!-- Step 1 -->
+    <div class="onboard-step active" id="step-0">
+      <h2>Welcome, friend 🕊️</h2>
+      <p>Before we begin, let me get to know you a little. What best describes where you are right now?</p>
+      <div class="onboard-options">
+        <button class="onboard-opt" data-val="seeking_peace">I'm looking for peace and comfort</button>
+        <button class="onboard-opt" data-val="growing_faith">I want to grow deeper in my faith</button>
+        <button class="onboard-opt" data-val="going_through_something">I'm going through something hard</button>
+        <button class="onboard-opt" data-val="just_exploring">I'm just exploring</button>
+      </div>
+      <button class="onboard-next" id="next-0" disabled>Continue</button>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="onboard-step" id="step-1">
+      <h2>How do you prefer to connect? 📖</h2>
+      <p>This helps me meet you where you are.</p>
+      <div class="onboard-options">
+        <button class="onboard-opt" data-val="through_scripture">Through scripture and Bible study</button>
+        <button class="onboard-opt" data-val="through_prayer">Through prayer and quiet reflection</button>
+        <button class="onboard-opt" data-val="through_conversation">Through open honest conversation</button>
+        <button class="onboard-opt" data-val="through_all">All of the above</button>
+      </div>
+      <button class="onboard-next" id="next-1" disabled>Continue</button>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="onboard-step" id="step-2">
+      <h2>You are welcome here ✨</h2>
+      <div class="onboard-greeting" id="onboard-greeting">Loading a word for you…</div>
+      <p style="margin-bottom:1.2rem">Which Bible translation feels most familiar to you?</p>
+      <div class="onboard-options" id="trans-options">
+        <button class="onboard-opt" data-val="NIV">NIV — New International Version</button>
+        <button class="onboard-opt" data-val="ESV">ESV — English Standard Version</button>
+        <button class="onboard-opt" data-val="NLT">NLT — New Living Translation</button>
+        <button class="onboard-opt" data-val="KJV">KJV — King James Version</button>
+        <button class="onboard-opt" data-val="NKJV">NKJV — New King James Version</button>
+        <button class="onboard-opt" data-val="CSB">CSB — Christian Standard Bible</button>
+      </div>
+      <button class="onboard-next" id="next-2" disabled>Enter VerseMate</button>
+    </div>
+  </div>
+</div>
+
+<!-- Main app -->
 <div id="app" style="display:none">
   <div id="overlay"></div>
 
@@ -134,9 +217,13 @@ hr{border:none;border-top:1px solid #3d2f1e;margin:.75rem 0}
     <hr/>
 
     <div class="sidebar-section">Translation</div>
-    <div class="translation-row">
-      <button class="trans-btn active" data-t="ESV">ESV</button>
+    <div class="translation-grid">
+      <button class="trans-btn active" data-t="NIV">NIV</button>
+      <button class="trans-btn" data-t="ESV">ESV</button>
+      <button class="trans-btn" data-t="NLT">NLT</button>
       <button class="trans-btn" data-t="KJV">KJV</button>
+      <button class="trans-btn" data-t="NKJV">NKJV</button>
+      <button class="trans-btn" data-t="CSB">CSB</button>
     </div>
     <hr/>
 
@@ -165,25 +252,18 @@ hr{border:none;border-top:1px solid #3d2f1e;margin:.75rem 0}
     <div id="daily-verse">
       <div class="dv-label">Today's Word</div>
       <div class="dv-verse" id="dv-verse">Loading…</div>
-      <div class="dv-word"  id="dv-word"></div>
+      <div class="dv-word" id="dv-word"></div>
     </div>
 
-    <!-- Devotional picker (shown when devotional mode + no theme) -->
     <div id="devot-picker" style="display:none"></div>
-
-    <!-- Day banner (shown during devotional session) -->
     <div id="day-banner" class="day-banner" style="display:none"></div>
-
-    <!-- Chat messages -->
     <div id="chat-wrap"></div>
 
-    <!-- Devotional nav buttons -->
     <div id="devot-nav" class="devot-nav" style="display:none">
       <button id="next-day-btn">➡️ Next Day</button>
       <button id="restart-plan-btn">🔄 Restart Plan</button>
     </div>
 
-    <!-- Input -->
     <div id="input-area">
       <input id="user-input" type="text" placeholder="How are you doing today?" autocomplete="off"/>
       <button id="send-btn">Send</button>
@@ -192,13 +272,13 @@ hr{border:none;border-top:1px solid #3d2f1e;margin:.75rem 0}
 </div>
 
 <script>
-// ── State ──────────────────────────────────────────────────────────────────────
 const state = {
   mode: 'heart_check',
-  translation: 'ESV',
-  messages: [],          // current chat history
+  translation: 'NIV',
+  messages: [],
   favorites: [],
-  devotional: null,      // {theme, day} or null
+  devotional: null,
+  onboarding: { step0: null, step1: null, step2: null },
   modeTitles: {
     heart_check: '💛 Heart Check',
     general:     '💬 General',
@@ -208,9 +288,9 @@ const state = {
     devotional:  '📅 Devotional',
   },
   DEVOTIONAL_THEMES: {
-    identity:  { label: '🪞 Identity',    desc: 'Discover who you are through my eyes — not the world\'s.', days: 7 },
-    faith:     { label: '🕊️ Faith',       desc: 'Grow deeper in trusting me — even when you cannot see.', days: 7 },
-    gratitude: { label: '🌿 Gratitude',   desc: 'Train your heart to see my hand in everything.', days: 7 },
+    identity:  { label: '🪞 Identity',  desc: 'Discover who you are through my eyes — not the world\'s.', days: 7 },
+    faith:     { label: '🕊️ Faith',     desc: 'Grow deeper in trusting me — even when you cannot see.', days: 7 },
+    gratitude: { label: '🌿 Gratitude', desc: 'Train your heart to see my hand in everything.', days: 7 },
   }
 };
 
@@ -218,14 +298,23 @@ function loadStorage() {
   try {
     state.favorites  = JSON.parse(localStorage.getItem('vm_favorites')  || '[]');
     state.devotional = JSON.parse(localStorage.getItem('vm_devotional') || 'null');
+    const savedTrans = localStorage.getItem('vm_translation');
+    if (savedTrans) state.translation = savedTrans;
   } catch(e) {}
 }
 function saveStorage() {
-  localStorage.setItem('vm_favorites',  JSON.stringify(state.favorites));
-  localStorage.setItem('vm_devotional', JSON.stringify(state.devotional));
+  localStorage.setItem('vm_favorites',   JSON.stringify(state.favorites));
+  localStorage.setItem('vm_devotional',  JSON.stringify(state.devotional));
+  localStorage.setItem('vm_translation', state.translation);
 }
 
-// ── DOM refs ───────────────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
 const $chat      = document.getElementById('chat-wrap');
 const $input     = document.getElementById('user-input');
 const $sendBtn   = document.getElementById('send-btn');
@@ -235,17 +324,98 @@ const $dayBanner = document.getElementById('day-banner');
 const $devotNav  = document.getElementById('devot-nav');
 const $inputArea = document.getElementById('input-area');
 
-// ── Welcome ────────────────────────────────────────────────────────────────────
 document.getElementById('enter-btn').onclick = () => {
   document.getElementById('welcome').style.display = 'none';
+  const alreadyOnboarded = localStorage.getItem('vm_onboarded');
+  if (alreadyOnboarded) {
+    launchApp();
+  } else {
+    document.getElementById('onboarding').classList.add('show');
+    setupOnboarding();
+  }
+};
+
+function setupOnboarding() {
+  [0, 1].forEach(stepIdx => {
+    const step = document.getElementById(`step-${stepIdx}`);
+    const nextBtn = document.getElementById(`next-${stepIdx}`);
+    step.querySelectorAll('.onboard-opt').forEach(opt => {
+      opt.onclick = () => {
+        step.querySelectorAll('.onboard-opt').forEach(o => o.classList.remove('selected'));
+        opt.classList.add('selected');
+        state.onboarding[`step${stepIdx}`] = opt.dataset.val;
+        nextBtn.disabled = false;
+      };
+    });
+    nextBtn.onclick = () => advanceOnboarding(stepIdx);
+  });
+
+  document.getElementById('trans-options').querySelectorAll('.onboard-opt').forEach(opt => {
+    opt.onclick = () => {
+      document.getElementById('trans-options').querySelectorAll('.onboard-opt').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      state.onboarding.step2 = opt.dataset.val;
+      state.translation = opt.dataset.val;
+      document.getElementById('next-2').disabled = false;
+    };
+  });
+
+  document.getElementById('next-2').onclick = () => finishOnboarding();
+}
+
+async function advanceOnboarding(currentStep) {
+  const nextStep = currentStep + 1;
+  document.getElementById(`step-${currentStep}`).classList.remove('active');
+  document.getElementById(`step-${nextStep}`).classList.add('active');
+  document.getElementById(`dot-${currentStep}`).classList.remove('active');
+  document.getElementById(`dot-${nextStep}`).classList.add('active');
+
+  if (nextStep === 2) {
+    const greetingEl = document.getElementById('onboard-greeting');
+    greetingEl.textContent = 'Loading a word for you…';
+    try {
+      const r = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({
+          mode: 'general',
+          translation: 'NIV',
+          messages: [{role:'user', content:
+            `The user just arrived at VerseMate. Their current season is: "${state.onboarding.step0}". 
+             Give them a single warm, personal 2-3 sentence greeting in the first-person voice of Jesus. 
+             Make it feel intimate and directly spoken to them. No questions, just a welcome.`
+          }]
+        })
+      });
+      const d = await r.json();
+      greetingEl.textContent = d.reply;
+    } catch(e) {
+      greetingEl.textContent = 'Peace be with you. I have been waiting for you. You are exactly where you are meant to be.';
+    }
+  }
+}
+
+function finishOnboarding() {
+  localStorage.setItem('vm_onboarded', '1');
+  document.getElementById('onboarding').classList.remove('show');
+  launchApp();
+}
+
+function launchApp() {
   document.getElementById('app').style.display = 'flex';
   loadStorage();
+  syncTranslationButtons();
   renderFavorites();
   loadDailyVerse();
   startChat();
-};
+}
 
-// ── Mobile sidebar ─────────────────────────────────────────────────────────────
+function syncTranslationButtons() {
+  document.querySelectorAll('.trans-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.t === state.translation);
+  });
+}
+
 document.getElementById('menu-toggle').onclick = () => {
   document.getElementById('sidebar').classList.toggle('open');
   document.getElementById('overlay').classList.toggle('show');
@@ -255,16 +425,16 @@ document.getElementById('overlay').onclick = () => {
   document.getElementById('overlay').classList.remove('show');
 };
 
-// ── Translation ────────────────────────────────────────────────────────────────
 document.querySelectorAll('.trans-btn').forEach(b => {
   b.onclick = () => {
     document.querySelectorAll('.trans-btn').forEach(x => x.classList.remove('active'));
     b.classList.add('active');
     state.translation = b.dataset.t;
+    saveStorage();
+    showToast(`Translation set to ${b.dataset.t}`);
   };
 });
 
-// ── Mode buttons ───────────────────────────────────────────────────────────────
 document.querySelectorAll('.mode-btn[data-mode]').forEach(b => {
   b.onclick = () => {
     document.querySelectorAll('.mode-btn[data-mode]').forEach(x => x.classList.remove('active'));
@@ -279,14 +449,12 @@ document.querySelectorAll('.mode-btn[data-mode]').forEach(b => {
   };
 });
 
-// ── Clear ──────────────────────────────────────────────────────────────────────
 document.getElementById('clear-btn').onclick = () => {
   state.messages = [];
   clearChat();
   startChat();
 };
 
-// ── Daily verse ────────────────────────────────────────────────────────────────
 async function loadDailyVerse() {
   const today = new Date().toDateString();
   const cached = JSON.parse(localStorage.getItem('vm_dv') || 'null');
@@ -306,29 +474,62 @@ async function loadDailyVerse() {
   }
 }
 
-// ── Chat helpers ───────────────────────────────────────────────────────────────
 function clearChat() { $chat.innerHTML = ''; }
 
 function appendMsg(role, text, showSave=false) {
   const div = document.createElement('div');
   div.className = `msg ${role}`;
   div.innerHTML = text.replace(/\n/g,'<br/>');
+
   if (showSave && role === 'assistant') {
     const actions = document.createElement('div');
     actions.className = 'msg-actions';
-    const btn = document.createElement('button');
-    btn.className = 'save-btn';
-    btn.textContent = '⭐ Save this';
-    btn.onclick = () => {
+
+    const saveBtn = document.createElement('button');
+    saveBtn.className = 'save-btn';
+    saveBtn.textContent = '⭐ Save';
+    saveBtn.onclick = () => {
       state.favorites.push(text);
       saveStorage();
       renderFavorites();
-      btn.textContent = '✓ Saved';
-      btn.classList.add('saved');
+      saveBtn.textContent = '✓ Saved';
+      saveBtn.classList.add('saved');
     };
-    actions.appendChild(btn);
+
+    const copyBtn = document.createElement('button');
+    copyBtn.className = 'copy-btn';
+    copyBtn.textContent = '📋 Copy';
+    copyBtn.onclick = () => {
+      navigator.clipboard.writeText(text).then(() => {
+        copyBtn.textContent = '✓ Copied';
+        copyBtn.classList.add('copied');
+        showToast('Copied to clipboard');
+        setTimeout(() => {
+          copyBtn.textContent = '📋 Copy';
+          copyBtn.classList.remove('copied');
+        }, 2000);
+      });
+    };
+
+    const shareBtn = document.createElement('button');
+    shareBtn.className = 'share-btn';
+    shareBtn.textContent = '↗ Share';
+    shareBtn.onclick = () => {
+      const shareText = `VerseMate — "${text.slice(0,200)}${text.length>200?'…':''}"`;
+      if (navigator.share) {
+        navigator.share({ title:'VerseMate', text:shareText, url:window.location.href }).catch(()=>{});
+      } else {
+        navigator.clipboard.writeText(shareText);
+        showToast('Copied to share!');
+      }
+    };
+
+    actions.appendChild(saveBtn);
+    actions.appendChild(copyBtn);
+    actions.appendChild(shareBtn);
     div.appendChild(actions);
   }
+
   $chat.appendChild(div);
   $chat.scrollTop = $chat.scrollHeight;
   return div;
@@ -344,7 +545,6 @@ function showTyping() {
 }
 function removeTyping() { document.getElementById('typing-indicator')?.remove(); }
 
-// ── Favorites ─────────────────────────────────────────────────────────────────
 function renderFavorites() {
   const el = document.getElementById('fav-list');
   el.innerHTML = '';
@@ -365,7 +565,6 @@ function renderFavorites() {
   });
 }
 
-// ── API call ───────────────────────────────────────────────────────────────────
 async function apiChat(messages, mode, translation) {
   const r = await fetch('/api/chat', {
     method: 'POST',
@@ -411,7 +610,6 @@ function showYoutubeResults(videos) {
   $chat.scrollTop = $chat.scrollHeight;
 }
 
-// ── Start / send ───────────────────────────────────────────────────────────────
 async function startChat() {
   $devotPick.style.display = 'none';
   $dayBanner.style.display = 'none';
@@ -419,17 +617,12 @@ async function startChat() {
   $inputArea.style.display = 'flex';
 
   if (state.mode === 'devotional') {
-    if (!state.devotional) {
-      showDevotPicker(); return;
-    }
+    if (!state.devotional) { showDevotPicker(); return; }
     showDevotSession();
-    if (state.messages.length === 0) {
-      await sendDevotOpening();
-    }
+    if (state.messages.length === 0) await sendDevotOpening();
     return;
   }
 
-  // Regular modes — opening greeting
   $sendBtn.disabled = true;
   showTyping();
   try {
@@ -463,7 +656,6 @@ async function sendMessage() {
     removeTyping();
     state.messages.push({role:'assistant', content: reply});
     appendMsg('assistant', reply, true);
-
     if (state.mode === 'bible_study') {
       const videos = await fetchYoutube(text);
       showYoutubeResults(videos);
@@ -478,7 +670,6 @@ async function sendMessage() {
 $sendBtn.onclick = sendMessage;
 $input.addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(); });
 
-// ── Devotional ─────────────────────────────────────────────────────────────────
 function showDevotPicker() {
   $devotPick.style.display = 'flex';
   $inputArea.style.display = 'none';
@@ -507,8 +698,6 @@ function showDevotSession() {
   const {theme, day} = state.devotional;
   const info = state.DEVOTIONAL_THEMES[theme];
   $dayBanner.innerHTML = `<strong>${info.label} — Day ${day+1} of 7</strong>`;
-
-  // Next day btn
   const nextBtn = document.getElementById('next-day-btn');
   if (day >= 6) {
     nextBtn.textContent = '🎉 Plan Complete!';
