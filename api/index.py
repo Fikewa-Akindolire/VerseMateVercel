@@ -157,7 +157,7 @@ DEVOTIONAL_THEMES = {
 @app.get("/api/daily-verse")
 async def daily_verse():
     resp = client.messages.create(
-        model="claude-sonnet-4-20250514",
+        model="claude-sonnet-4-5",
         max_tokens=200,
         system="You speak in the first-person voice of Jesus Christ. Speak directly to the reader.",
         messages=[{"role": "user", "content":
@@ -191,7 +191,7 @@ async def chat(request: Request):
             "Speak directly to them in first person as Jesus."}]
 
     resp = client.messages.create(
-        model="claude-sonnet-4-20250514",
+        model="claude-sonnet-4-5",
         max_tokens=max_tokens,
         system=system,
         messages=messages
@@ -226,7 +226,7 @@ async def devotional_chat(request: Request):
         max_tokens = 1000
 
     resp = client.messages.create(
-        model="claude-sonnet-4-20250514",
+        model="claude-sonnet-4-5",
         max_tokens=max_tokens,
         system=system,
         messages=messages
