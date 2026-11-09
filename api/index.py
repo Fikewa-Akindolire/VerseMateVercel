@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 import anthropic
 import requests as req
@@ -21,7 +21,7 @@ YOUTUBE_API_KEY = os.environ.get("YOUTUBE_API_KEY", "")
 # ── Health checks ──────────────────────────────────────────────────────────────
 @app.get("/")
 def home():
-    return {"message": "Hello from VerseMate on Vercel"}
+    return FileResponse("public/index.html")
 
 @app.get("/api/items/{item_id}")
 def read_item(item_id: int):
