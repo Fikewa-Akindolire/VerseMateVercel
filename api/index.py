@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
+from api.research_db import check_database_connection
 import anthropic
 import requests as req
 import os
@@ -27,6 +28,26 @@ def home():
 def read_item(item_id: int):
     return {"item_id": item_id}
 
+@app.get("/api/research/db-check")
+def research_db_check():
+    if os.environ.get("ENABLE_DB_CHECK") != "true":
+        return JSONResponse(
+            {"error": "Not found"},
+            status_code=404
+        )
+
+    try:
+        connected = check_database_connection()
+
+        return JSONResponse({
+            "database": "connected" if connected else "schema_not_found"
+        })
+
+    except Exception:
+        return JSONResponse(
+            {"database": "connection_failed"},
+            status_code=503
+        )
 # ── Personality & Rules ────────────────────────────────────────────────────────
 REFUSAL_RULE = """
 IMPORTANT — Out-of-scope rule:

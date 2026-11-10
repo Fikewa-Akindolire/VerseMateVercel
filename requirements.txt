@@ -2,3 +2,4 @@ anthropic
 fastapi
 requests
 uvicorn
+psycopg[binary]
