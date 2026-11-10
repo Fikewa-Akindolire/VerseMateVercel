@@ -1,0 +1,13 @@
+
+# Environment variables and secrets
+.env*
+
+# Vercel configuration
+.vercel/
+
+# Node.js dependencies
+node_modules/
+
+# Python cache files
+__pycache__/
+*.pyc
